@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FPS Controls</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #info {
+      position: absolute;
+      top: 40%;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-family: sans-serif;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="info">Click to play</div>
+
+<!-- IMPORT MAP -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/loaders/GLTFLoader.js';
+
+// --------------------
+// BASIC SCENE
+// --------------------
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x202020);
+
+// --------------------
+// CAMERA
+// --------------------
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.y = 1.6; // eye height
+
+// --------------------
+// RENDERER
+// --------------------
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// --------------------
+// LIGHT
+// --------------------
+scene.add(new THREE.AmbientLight(0xffffff, 1));
+
+// --------------------
+// LOAD GLB (optional)
+// --------------------
+new GLTFLoader().load(
+  'scene.glb',
+  (gltf) => scene.add(gltf.scene),
+  undefined,
+  (e) => console.error(e)
+);
+
+// --------------------
+// POINTER LOCK
+// --------------------
+const info = document.getElementById('info');
+
+info.addEventListener('click', () => {
+  document.body.requestPointerLock();
+});
+
+document.addEventListener('pointerlockchange', () => {
+  info.style.display =
+    document.pointerLockElement === document.body ? 'none' : 'block';
+});
+
+// --------------------
+// MOUSE LOOK
+// --------------------
+let yaw = 0;
+let pitch = 0;
+
+document.addEventListener('mousemove', (event) => {
+  if (document.pointerLockElement !== document.body) return;
+
+  yaw -= event.movementX * 0.002;
+  pitch -= event.movementY * 0.002;
+
+  pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch));
+
+  camera.rotation.set(pitch, yaw, 0);
+});
+
+// --------------------
+// KEYBOARD MOVEMENT
+// --------------------
+const keys = {};
+
+document.addEventListener('keydown', (e) => keys[e.code] = true);
+document.addEventListener('keyup', (e) => keys[e.code] = false);
+
+const speed = 5;
+const velocity = new THREE.Vector3();
+const direction = new THREE.Vector3();
+
+// --------------------
+// LOOP
+// --------------------
+let prevTime = performance.now();
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const time = performance.now();
+  const delta = (time - prevTime) / 1000;
+
+  velocity.set(0, 0, 0);
+
+  if (keys['KeyW']) velocity.z -= 1;
+  if (keys['KeyS']) velocity.z += 1;
+  if (keys['KeyA']) velocity.x -= 1;
+  if (keys['KeyD']) velocity.x += 1;
+  if (keys['Space']) velocity.y += 1;
+  if (keys['ShiftLeft']) velocity.y -= 1;
+
+  direction.copy(velocity).normalize().multiplyScalar(speed * delta);
+  direction.applyEuler(camera.rotation);
+
+  camera.position.add(direction);
+
+  renderer.render(scene, camera);
+  prevTime = time;
+}
+
+animate();
+
+// --------------------
+// RESIZE
+// --------------------
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
+</body>
+</html>
