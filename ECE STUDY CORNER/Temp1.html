@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tower Cell Icon Display</title>
+
+  <!-- Font Awesome CDN for icons -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #38bdf8;
+      --text-color: #f8fafc;
+      --muted-color: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .icon-container {
+      font-size: 4rem;
+      color: var(--accent-color);
+      margin-bottom: 20px;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .icon-container {
+      transform: scale(1.1);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    p {
+      color: var(--muted-color);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    code {
+      background-color: rgba(0, 0, 0, 0.3);
+      color: var(--accent-color);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: block;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="icon-container">
+      <!-- Your Icon -->
+      <i class="fa-solid fa-tower-cell"></i>
+    </div>
+    <h1>Tower Cell Icon</h1>
+    <p>Rendered using Font Awesome 6</p>
+    <code>&lt;i class="fa-solid fa-tower-cell"&gt;&lt;/i&gt;</code>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TERMINAL</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+}
+
+body{
+    background:#000;
+    color:#fff;
+    overflow:hidden;
+}
+
+/* =========================================
+   MAIN TERMINAL
+========================================= */
+
+.terminal{
+    width:100%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:#000;
+}
+
+/* =========================================
+   HEADER
+========================================= */
+
+.header{
+
+    height:70px;
+    min-height:70px;
+
+    background:#111;
+
+    border-bottom:2px solid #00cc44;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 18px;
+
+    box-shadow:
+        0 2px 15px rgba(0,204,68,.18);
+
+    z-index:10;
+}
+
+.header-icon{
+
+    width:45px;
+    height:45px;
+
+    border:1.5px solid #00cc44;
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:#00cc44;
+
+    margin-right:12px;
+
+    font-size:21px;
+}
+
+.header-info{
+    flex:1;
+}
+
+.header-title{
+
+    color:#fff;
+
+    font-size:21px;
+    font-weight:bold;
+
+    letter-spacing:1px;
+}
+
+.header-status{
+
+    color:#00cc44;
+
+    font-size:12px;
+
+    margin-top:3px;
+}
+
+.header-id{
+
+    color:#777;
+
+    font-size:11px;
+
+    margin-top:2px;
+}
+
+/* =========================================
+   CHAT AREA
+========================================= */
+
+.chat-area{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    padding:20px 15px 25px;
+
+    display:flex;
+    flex-direction:column;
+
+    scroll-behavior:smooth;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,204,68,.025),
+            transparent 60%
+        );
+}
+
+/* Scrollbar */
+
+.chat-area::-webkit-scrollbar{
+    width:6px;
+}
+
+.chat-area::-webkit-scrollbar-track{
+    background:#080808;
+}
+
+.chat-area::-webkit-scrollbar-thumb{
+    background:#00cc44;
+    border-radius:10px;
+}
+
+/* =========================================
+   DATE / SYSTEM MESSAGE
+========================================= */
+
+.system-message{
+
+    align-self:center;
+
+    color:#777;
+
+    font-size:11px;
+
+    background:#111;
+
+    border:1px solid #222;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    margin-bottom:18px;
+}
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.message{
+
+    max-width:75%;
+
+    padding:10px 13px;
+
+    margin-bottom:10px;
+
+    border-radius:12px;
+
+    position:relative;
+
+    animation:messageAppear .2s ease;
+
+    word-wrap:break-word;
+}
+
+@keyframes messageAppear{
+
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+/* Other users */
+
+.message.other{
+
+    align-self:flex-start;
+
+    background:#111;
+
+    border:1px solid #222;
+
+    border-left:3px solid #00cc44;
+
+    border-radius:4px 12px 12px 12px;
+}
+
+/* Current user */
+
+.message.mine{
+
+    align-self:flex-end;
+
+    background:#063b19;
+
+    border:1px solid #00cc44;
+
+    border-radius:12px 4px 12px 12px;
+}
+
+.sender{
+
+    color:#00cc44;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    margin-bottom:5px;
+}
+
+.message-text{
+
+    color:#fff;
+
+    font-size:15px;
+
+    line-height:1.45;
+
+}
+
+.message-time{
+
+    color:#777;
+
+    font-size:9px;
+
+    text-align:right;
+
+    margin-top:5px;
+}
+
+/* =========================================
+   EMPTY CHAT
+========================================= */
+
+.empty-chat{
+
+    margin:auto;
+
+    text-align:center;
+
+    color:#555;
+}
+
+.empty-chat i{
+
+    font-size:45px;
+
+    color:#00cc44;
+
+    margin-bottom:12px;
+
+    opacity:.6;
+}
+
+.empty-chat h3{
+
+    color:#888;
+
+    font-size:17px;
+
+    margin-bottom:5px;
+}
+
+.empty-chat p{
+
+    font-size:12px;
+}
+
+/* =========================================
+   INPUT AREA
+========================================= */
+
+.input-area{
+
+    min-height:75px;
+
+    background:#0b0b0b;
+
+    border-top:1px solid #222;
+
+    padding:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+/* Input container */
+
+.input-box{
+
+    flex:1;
+
+    display:flex;
+
+    align-items:center;
+
+    background:#151515;
+
+    border:1.5px solid #333;
+
+    border-radius:25px;
+
+    padding:0 15px;
+
+    transition:.2s;
+}
+
+.input-box:focus-within{
+
+    border-color:#00cc44;
+
+    box-shadow:
+        0 0 10px rgba(0,204,68,.15);
+}
+
+.input-box i{
+
+    color:#00cc44;
+
+    margin-right:10px;
+
+    font-size:16px;
+}
+
+#messageInput{
+
+    width:100%;
+
+    height:45px;
+
+    background:transparent;
+
+    border:none;
+
+    outline:none;
+
+    color:#fff;
+
+    font-size:15px;
+}
+
+#messageInput::placeholder{
+
+    color:#666;
+}
+
+/* Send */
+
+#sendButton{
+
+    width:48px;
+    height:48px;
+
+    min-width:48px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#00cc44;
+
+    color:#000;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    transition:.2s;
+
+    box-shadow:
+        0 0 12px rgba(0,204,68,.2);
+}
+
+#sendButton:hover{
+
+    transform:scale(1.08);
+
+    box-shadow:
+        0 0 20px rgba(0,204,68,.45);
+}
+
+#sendButton:active{
+
+    transform:scale(.94);
+}
+
+#sendButton:disabled{
+
+    opacity:.4;
+
+    cursor:not-allowed;
+
+    transform:none;
+}
+
+/* =========================================
+   LOADING
+========================================= */
+
+.loading{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#000;
+
+    z-index:100;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-direction:column;
+}
+
+.loading i{
+
+    color:#00cc44;
+
+    font-size:45px;
+
+    animation:spin 1s linear infinite;
+}
+
+.loading p{
+
+    color:#777;
+
+    margin-top:15px;
+
+    font-size:13px;
+}
+
+@keyframes spin{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================================
+   INVALID CHAT
+========================================= */
+
+.error-screen{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#000;
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding:25px;
+
+    z-index:200;
+}
+
+.error-box{
+
+    background:#111;
+
+    border:2px solid #00cc44;
+
+    border-radius:15px;
+
+    padding:30px;
+
+    max-width:400px;
+}
+
+.error-box i{
+
+    font-size:45px;
+
+    color:#00cc44;
+
+    margin-bottom:15px;
+}
+
+.error-box h2{
+
+    margin-bottom:10px;
+}
+
+.error-box p{
+
+    color:#777;
+
+    font-size:13px;
+    line-height:1.5;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:600px){
+
+    .header{
+        height:65px;
+        min-height:65px;
+        padding:0 12px;
+    }
+
+    .header-title{
+        font-size:19px;
+    }
+
+    .header-icon{
+        width:40px;
+        height:40px;
+        font-size:18px;
+    }
+
+    .chat-area{
+        padding:15px 10px 20px;
+    }
+
+    .message{
+        max-width:82%;
+    }
+
+    .message-text{
+        font-size:14px;
+    }
+
+    .input-area{
+        padding:9px;
+    }
+
+    #sendButton{
+        width:46px;
+        height:46px;
+        min-width:46px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Loading -->
+
+<div class="loading" id="loadingScreen">
+
+    <i class="fa-solid fa-tower-cell"></i>
+
+    <p>Connecting to TERMINAL...</p>
+
+</div>
+
+
+<!-- Invalid ID -->
+
+<div class="error-screen" id="errorScreen">
+
+    <div class="error-box">
+
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
+        <h2>TERMINAL Not Found</h2>
+
+        <p id="errorText">
+            This TERMINAL ID is invalid or unavailable.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- TERMINAL -->
+
+<div class="terminal">
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <div class="header-icon">
+
+            <i class="fa-solid fa-tower-cell"></i>
+
+        </div>
+
+        <div class="header-info">
+
+            <div class="header-title">
+                TERMINAL
+            </div>
+
+            <div class="header-status">
+                ● Connected
+            </div>
+
+            <div class="header-id" id="terminalId">
+                Loading...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Chat -->
+
+    <div class="chat-area" id="chatArea">
+
+        <div class="empty-chat" id="emptyChat">
+
+            <i class="fa-solid fa-comments"></i>
+
+            <h3>Welcome to TERMINAL</h3>
+
+            <p>Start the conversation.</p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Input -->
+
+    <div class="input-area">
+
+        <div class="input-box">
+
+            <i class="fa-regular fa-message"></i>
+
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Type a message..."
+                autocomplete="off"
+            >
+
+        </div>
+
+        <button id="sendButton">
+
+            <i class="fa-solid fa-paper-plane"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- Firebase -->
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    push,
+    set,
+    onValue,
+    serverTimestamp,
+    get
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
+
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDijtPeL8_8xUjd-3MH3u0Z8qhOEUMPqI",
+
+    authDomain:
+        "mrindiangamerdb.firebaseapp.com",
+
+    databaseURL:
+        "https://mrindiangamerdb-default-rtdb.firebaseio.com",
+
+    projectId:
+        "mrindiangamerdb",
+
+    storageBucket:
+        "mrindiangamerdb.firebasestorage.app",
+
+    messagingSenderId:
+        "776760304090",
+
+    appId:
+        "1:776760304090:web:b229855ce011eebf28a0e3",
+
+    measurementId:
+        "G-DJQK8ZG7PZ"
+};
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+
+/* =========================================
+   GET TERMINAL ID FROM URL
+========================================= */
+
+const urlParams =
+    new URLSearchParams(window.location.search);
+
+const terminalId =
+    urlParams.get("pid");
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const loadingScreen =
+    document.getElementById("loadingScreen");
+
+const errorScreen =
+    document.getElementById("errorScreen");
+
+const errorText =
+    document.getElementById("errorText");
+
+const terminalIdElement =
+    document.getElementById("terminalId");
+
+const chatArea =
+    document.getElementById("chatArea");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendButton =
+    document.getElementById("sendButton");
+
+const emptyChat =
+    document.getElementById("emptyChat");
+
+
+/* =========================================
+   USER IDENTITY
+========================================= */
+
+/*
+   For now we create a local identity.
+
+   Later we can connect this to Firebase Auth
+   or your own user system.
+*/
+
+let senderName =
+    localStorage.getItem("terminalSenderName");
+
+
+if(!senderName){
+
+    senderName =
+        "Guest-" +
+        Math.floor(1000 + Math.random() * 9000);
+
+    localStorage.setItem(
+        "terminalSenderName",
+        senderName
+    );
+}
+
+
+/* =========================================
+   CHECK PID
+========================================= */
+
+if(!terminalId){
+
+    loadingScreen.style.display = "none";
+
+    errorText.textContent =
+        "No TERMINAL ID was provided in the URL.";
+
+    errorScreen.style.display = "flex";
+
+    throw new Error("Missing pid");
+
+}
+
+
+/* =========================================
+   NORMALIZE ID
+========================================= */
+
+const cleanTerminalId =
+    terminalId.trim();
+
+
+terminalIdElement.textContent =
+    "ID: " + cleanTerminalId;
+
+
+/* =========================================
+   TERMINAL REFERENCE
+========================================= */
+
+const terminalRef =
+    ref(
+        db,
+        "EC - Diploma/Terminal/" +
+        cleanTerminalId
+    );
+
+
+/* =========================================
+   CHECK TERMINAL EXISTS
+========================================= */
+
+try{
+
+    const snapshot =
+        await get(terminalRef);
+
+
+    if(!snapshot.exists()){
+
+        loadingScreen.style.display =
+            "none";
+
+        errorText.textContent =
+            "TERMINAL ID \"" +
+            cleanTerminalId +
+            "\" does not exist.";
+
+        errorScreen.style.display =
+            "flex";
+
+        throw new Error(
+            "TERMINAL does not exist"
+        );
+
+    }
+
+}catch(error){
+
+    console.error(error);
+
+}
+
+
+/* =========================================
+   LOAD MESSAGES
+========================================= */
+
+const messagesRef =
+    ref(
+        db,
+        "terminalChats/" +
+        cleanTerminalId +
+        "/messages"
+    );
+
+
+onValue(
+    messagesRef,
+    (snapshot)=>{
+
+        loadingScreen.style.display =
+            "none";
+
+        /*
+           Remove previous messages
+           while preserving empty screen.
+        */
+
+        chatArea.innerHTML = "";
+
+
+        if(!snapshot.exists()){
+
+            chatArea.appendChild(
+                createEmptyChat()
+            );
+
+            return;
+
+        }
+
+
+        const data =
+            snapshot.val();
+
+
+        const messages =
+            Object.entries(data);
+
+
+        /*
+           Sort by timestamp.
+        */
+
+        messages.sort(
+            (a,b)=>{
+
+                const timeA =
+                    a[1].timestamp || 0;
+
+                const timeB =
+                    b[1].timestamp || 0;
+
+                return timeA - timeB;
+
+            }
+        );
+
+
+        messages.forEach(
+            ([messageId,message])=>{
+
+                chatArea.appendChild(
+                    createMessage(message)
+                );
+
+            }
+        );
+
+
+        scrollToBottom();
+
+    },
+    (error)=>{
+
+        console.error(
+            "Firebase loading error:",
+            error
+        );
+
+        loadingScreen.style.display =
+            "none";
+
+        errorText.textContent =
+            "Unable to load this TERMINAL.";
+
+        errorScreen.style.display =
+            "flex";
+
+    }
+);
+
+
+/* =========================================
+   CREATE EMPTY CHAT
+========================================= */
+
+function createEmptyChat(){
+
+    const div =
+        document.createElement("div");
+
+    div.className =
+        "empty-chat";
+
+    div.innerHTML = `
+
+        <i class="fa-solid fa-comments"></i>
+
+        <h3>Welcome to TERMINAL</h3>
+
+        <p>Start the conversation.</p>
+
+    `;
+
+    return div;
+
+}
+
+
+/* =========================================
+   CREATE MESSAGE
+========================================= */
+
+function createMessage(message){
+
+    const wrapper =
+        document.createElement("div");
+
+
+    const isMine =
+        message.senderName === senderName;
+
+
+    wrapper.className =
+        "message " +
+        (isMine ? "mine" : "other");
+
+
+    const sender =
+        document.createElement("div");
+
+    sender.className =
+        "sender";
+
+    sender.textContent =
+        isMine
+        ? "You"
+        : (message.senderName || "Guest");
+
+
+    const text =
+        document.createElement("div");
+
+    text.className =
+        "message-text";
+
+    /*
+       textContent prevents HTML injection.
+    */
+
+    text.textContent =
+        message.text || "";
+
+
+    const time =
+        document.createElement("div");
+
+    time.className =
+        "message-time";
+
+    time.textContent =
+        formatTime(message.timestamp);
+
+
+    wrapper.appendChild(sender);
+
+    wrapper.appendChild(text);
+
+    wrapper.appendChild(time);
+
+
+    return wrapper;
+
+}
+
+
+/* =========================================
+   FORMAT TIME
+========================================= */
+
+function formatTime(timestamp){
+
+    if(!timestamp){
+
+        return "";
+
+    }
+
+    const date =
+        new Date(timestamp);
+
+
+    return date.toLocaleTimeString(
+        [],
+        {
+            hour:"2-digit",
+            minute:"2-digit"
+        }
+    );
+
+}
+
+
+/* =========================================
+   SEND MESSAGE
+========================================= */
+
+async function sendMessage(){
+
+    const text =
+        messageInput.value.trim();
+
+
+    if(!text){
+
+        return;
+
+    }
+
+
+    sendButton.disabled = true;
+
+
+    try{
+
+        const newMessageRef =
+            push(messagesRef);
+
+
+        await set(
+            newMessageRef,
+            {
+
+                text: text,
+
+                senderName:
+                    senderName,
+
+                timestamp:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        messageInput.value = "";
+
+        messageInput.focus();
+
+
+    }catch(error){
+
+        console.error(
+            "Message sending error:",
+            error
+        );
+
+        alert(
+            "Unable to send message."
+        );
+
+    }
+
+
+    sendButton.disabled = false;
+
+}
+
+
+/* =========================================
+   SEND BUTTON
+========================================= */
+
+sendButton.addEventListener(
+    "click",
+    sendMessage
+);
+
+
+/* =========================================
+   ENTER TO SEND
+========================================= */
+
+messageInput.addEventListener(
+    "keydown",
+    (event)=>{
+
+        if(
+            event.key === "Enter" &&
+            !event.shiftKey
+        ){
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   SCROLL
+========================================= */
+
+function scrollToBottom(){
+
+    requestAnimationFrame(
+        ()=>{
+
+            chatArea.scrollTop =
+                chatArea.scrollHeight;
+
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>

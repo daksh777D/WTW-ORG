@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ADD TERMINAL | EC - Diploma</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+
+/* =========================================
+   RESET
+========================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    background:#000;
+    color:#fff;
+}
+
+
+/* =========================================
+   MAIN
+========================================= */
+
+.page{
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.card{
+
+    width:100%;
+    max-width:430px;
+
+    background:#111;
+
+    border:2px solid #00cc44;
+
+    border-radius:16px;
+
+    padding:30px 25px;
+
+    box-shadow:
+        0 0 20px rgba(0,204,68,.18);
+
+    text-align:center;
+}
+
+
+/* =========================================
+   ICON
+========================================= */
+
+.main-icon{
+
+    width:70px;
+    height:70px;
+
+    margin:0 auto 18px;
+
+    border:2px solid #00cc44;
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:#00cc44;
+
+    font-size:30px;
+
+    box-shadow:
+        0 0 15px rgba(0,204,68,.2);
+}
+
+
+/* =========================================
+   TITLES
+========================================= */
+
+h1{
+
+    font-size:28px;
+
+    margin-bottom:6px;
+}
+
+.subtitle{
+
+    color:#00cc44;
+
+    font-size:13px;
+
+    letter-spacing:1px;
+
+    margin-bottom:25px;
+}
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+.input-group{
+
+    position:relative;
+
+    margin-bottom:15px;
+}
+
+.input-group i{
+
+    position:absolute;
+
+    left:15px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:#00cc44;
+
+    pointer-events:none;
+}
+
+.input-group input{
+
+    width:100%;
+
+    height:50px;
+
+    background:#090909;
+
+    color:#fff;
+
+    border:1.5px solid #333;
+
+    border-radius:10px;
+
+    outline:none;
+
+    padding:0 15px 0 45px;
+
+    font-size:15px;
+
+    transition:.2s;
+}
+
+.input-group input:focus{
+
+    border-color:#00cc44;
+
+    box-shadow:
+        0 0 10px rgba(0,204,68,.12);
+}
+
+
+/* =========================================
+   BUTTON
+========================================= */
+
+button{
+
+    width:100%;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#00cc44;
+
+    color:#000;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+button:hover{
+
+    background:#000;
+
+    color:#00cc44;
+
+    border:2px solid #00cc44;
+
+    box-shadow:
+        0 0 15px rgba(0,204,68,.25);
+}
+
+button:active{
+
+    transform:scale(.98);
+}
+
+
+/* =========================================
+   LOGIN ERROR
+========================================= */
+
+.message{
+
+    display:none;
+
+    margin-top:15px;
+
+    padding:11px;
+
+    border-radius:8px;
+
+    font-size:13px;
+
+    line-height:1.4;
+}
+
+.message.error{
+
+    display:block;
+
+    color:#ff5c5c;
+
+    background:rgba(255,0,0,.06);
+
+    border:1px solid #661111;
+}
+
+.message.success{
+
+    display:block;
+
+    color:#00cc44;
+
+    background:rgba(0,204,68,.06);
+
+    border:1px solid #00cc44;
+}
+
+
+/* =========================================
+   ADMIN PANEL
+========================================= */
+
+#adminPanel{
+
+    display:none;
+}
+
+.add-terminal-button{
+
+    width:170px;
+
+    height:170px;
+
+    margin:20px auto;
+
+    border-radius:50%;
+
+    border:2px solid #00cc44;
+
+    background:#071b0e;
+
+    color:#00cc44;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    box-shadow:
+        0 0 20px rgba(0,204,68,.12);
+}
+
+.add-terminal-button:hover{
+
+    transform:scale(1.04);
+
+    background:#00cc44;
+
+    color:#000;
+
+    box-shadow:
+        0 0 30px rgba(0,204,68,.35);
+}
+
+.add-terminal-button i{
+
+    font-size:42px;
+
+    margin-bottom:12px;
+}
+
+.add-terminal-button span{
+
+    font-size:15px;
+
+    font-weight:bold;
+}
+
+
+/* =========================================
+   CREATE TERMINAL AREA
+========================================= */
+
+#createArea{
+
+    display:none;
+
+    margin-top:20px;
+
+    padding-top:20px;
+
+    border-top:1px solid #222;
+}
+
+#createArea h3{
+
+    color:#00cc44;
+
+    font-size:17px;
+
+    margin-bottom:15px;
+}
+
+
+/* =========================================
+   TERMINAL INPUT
+========================================= */
+
+.terminal-input{
+
+    width:100%;
+
+    height:50px;
+
+    background:#090909;
+
+    color:#fff;
+
+    border:1.5px solid #333;
+
+    border-radius:10px;
+
+    padding:0 15px;
+
+    outline:none;
+
+    font-size:15px;
+
+    margin-bottom:12px;
+}
+
+.terminal-input:focus{
+
+    border-color:#00cc44;
+
+    box-shadow:
+        0 0 10px rgba(0,204,68,.12);
+}
+
+
+/* =========================================
+   SECONDARY BUTTON
+========================================= */
+
+.cancel-button{
+
+    margin-top:10px;
+
+    background:#151515;
+
+    color:#00cc44;
+
+    border:1.5px solid #00cc44;
+}
+
+.cancel-button:hover{
+
+    background:#00cc44;
+
+    color:#000;
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+.logout{
+
+    margin-top:25px;
+
+    color:#777;
+
+    background:none;
+
+    border:none;
+
+    height:auto;
+
+    font-size:13px;
+}
+
+.logout:hover{
+
+    color:#00cc44;
+
+    background:none;
+
+    border:none;
+
+    box-shadow:none;
+}
+
+
+/* =========================================
+   CREATED INFO
+========================================= */
+
+.created-info{
+
+    display:none;
+
+    margin-top:20px;
+
+    padding:15px;
+
+    background:#090909;
+
+    border:1px solid #00cc44;
+
+    border-radius:10px;
+
+    text-align:left;
+}
+
+.created-info p{
+
+    font-size:13px;
+
+    color:#aaa;
+
+    margin:5px 0;
+}
+
+.created-info strong{
+
+    color:#00cc44;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:500px){
+
+    .page{
+        padding:12px;
+    }
+
+    .card{
+        padding:25px 18px;
+    }
+
+    h1{
+        font-size:25px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="page">
+
+<div class="card">
+
+
+<!-- =====================================
+     LOGIN
+====================================== -->
+
+<div id="loginPanel">
+
+    <div class="main-icon">
+        <i class="fa-solid fa-lock"></i>
+    </div>
+
+    <h1>TERMINAL</h1>
+
+    <div class="subtitle">
+        ADMIN ACCESS
+    </div>
+
+
+    <div class="input-group">
+
+        <i class="fa-solid fa-user"></i>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <div class="input-group">
+
+        <i class="fa-solid fa-key"></i>
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <button id="loginButton">
+
+        <i class="fa-solid fa-right-to-bracket"></i>
+        &nbsp; LOGIN
+
+    </button>
+
+
+    <div id="loginMessage"
+         class="message">
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     ADMIN PANEL
+====================================== -->
+
+<div id="adminPanel">
+
+
+    <div class="main-icon">
+
+        <i class="fa-solid fa-tower-cell"></i>
+
+    </div>
+
+
+    <h1>ADD TERMINAL</h1>
+
+    <div class="subtitle">
+        EC - DIPLOMA
+    </div>
+
+
+    <!-- Add Button -->
+
+    <div
+        class="add-terminal-button"
+        id="addTerminalButton"
+    >
+
+        <i class="fa-solid fa-plus"></i>
+
+        <span>ADD TERMINAL</span>
+
+    </div>
+
+
+    <!-- Create Area -->
+
+    <div id="createArea">
+
+        <h3>
+            Create New TERMINAL
+        </h3>
+
+
+        <input
+            type="text"
+            id="terminalInput"
+            class="terminal-input"
+            placeholder="Enter New Terminal ID Here"
+            autocomplete="off"
+            maxlength="50"
+        >
+
+
+        <button id="createButton">
+
+            <i class="fa-solid fa-plus"></i>
+            &nbsp; CREATE TERMINAL
+
+        </button>
+
+
+        <button
+            id="cancelButton"
+            class="cancel-button"
+        >
+
+            Cancel
+
+        </button>
+
+
+        <div
+            id="createMessage"
+            class="message"
+        >
+        </div>
+
+    </div>
+
+
+    <!-- Created Information -->
+
+    <div
+        id="createdInfo"
+        class="created-info"
+    >
+
+        <p>
+            <strong>TERMINAL ID:</strong>
+            <span id="createdId"></span>
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            Successfully Created
+        </p>
+
+    </div>
+
+
+    <button
+        id="logoutButton"
+        class="logout"
+    >
+
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+
+    </button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+
+/* =========================================
+   FIREBASE
+========================================= */
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
+
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDijtPeL8_8xUjd-3MH3u0Z8qhOEUMPqI",
+
+    authDomain:
+        "mrindiangamerdb.firebaseapp.com",
+
+    databaseURL:
+        "https://mrindiangamerdb-default-rtdb.firebaseio.com",
+
+    projectId:
+        "mrindiangamerdb",
+
+    storageBucket:
+        "mrindiangamerdb.firebasestorage.app",
+
+    messagingSenderId:
+        "776760304090",
+
+    appId:
+        "1:776760304090:web:b229855ce011eebf28a0e3",
+
+    measurementId:
+        "G-DJQK8ZG7PZ"
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getDatabase(app);
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const loginPanel =
+    document.getElementById("loginPanel");
+
+const adminPanel =
+    document.getElementById("adminPanel");
+
+const username =
+    document.getElementById("username");
+
+const password =
+    document.getElementById("password");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const loginMessage =
+    document.getElementById("loginMessage");
+
+const addTerminalButton =
+    document.getElementById("addTerminalButton");
+
+const createArea =
+    document.getElementById("createArea");
+
+const terminalInput =
+    document.getElementById("terminalInput");
+
+const createButton =
+    document.getElementById("createButton");
+
+const cancelButton =
+    document.getElementById("cancelButton");
+
+const createMessage =
+    document.getElementById("createMessage");
+
+const createdInfo =
+    document.getElementById("createdInfo");
+
+const createdId =
+    document.getElementById("createdId");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
+loginButton.addEventListener(
+    "click",
+    login
+);
+
+
+password.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            login();
+
+        }
+
+    }
+);
+
+
+function login(){
+
+    const enteredUsername =
+        username.value.trim();
+
+    const enteredPassword =
+        password.value;
+
+
+    /*
+       Username is case-insensitive.
+    */
+
+    const correctUsername =
+        enteredUsername.toUpperCase()
+        === "ADMIN";
+
+
+    const correctPassword =
+        enteredPassword === "7891";
+
+
+    if(
+        correctUsername &&
+        correctPassword
+    ){
+
+        loginPanel.style.display =
+            "none";
+
+        adminPanel.style.display =
+            "block";
+
+        username.value = "";
+
+        password.value = "";
+
+        return;
+
+    }
+
+
+    loginMessage.textContent =
+        "Invalid username or password.";
+
+    loginMessage.className =
+        "message error";
+
+}
+
+
+/* =========================================
+   OPEN CREATE AREA
+========================================= */
+
+addTerminalButton.addEventListener(
+    "click",
+    function(){
+
+        createArea.style.display =
+            "block";
+
+        createdInfo.style.display =
+            "none";
+
+        terminalInput.focus();
+
+    }
+);
+
+
+/* =========================================
+   CANCEL
+========================================= */
+
+cancelButton.addEventListener(
+    "click",
+    function(){
+
+        createArea.style.display =
+            "none";
+
+        terminalInput.value = "";
+
+        clearCreateMessage();
+
+    }
+);
+
+
+/* =========================================
+   CREATE TERMINAL
+========================================= */
+
+createButton.addEventListener(
+    "click",
+    createTerminal
+);
+
+
+terminalInput.addEventListener(
+    "keydown",
+    function(event){
+
+        if(event.key === "Enter"){
+
+            createTerminal();
+
+        }
+
+    }
+);
+
+
+async function createTerminal(){
+
+    const rawId =
+        terminalInput.value.trim();
+
+
+    /* Empty */
+
+    if(!rawId){
+
+        showCreateError(
+            "Please enter a TERMINAL ID."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Remove characters that could
+       interfere with Firebase paths.
+    */
+
+    const terminalId =
+        rawId.replace(/[.#$[\]/]/g,"");
+
+
+    if(!terminalId){
+
+        showCreateError(
+            "Please enter a valid TERMINAL ID."
+        );
+
+        return;
+
+    }
+
+
+    if(terminalId.length > 50){
+
+        showCreateError(
+            "TERMINAL ID is too long."
+        );
+
+        return;
+
+    }
+
+
+    createButton.disabled = true;
+
+    createButton.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+
+
+    try{
+
+        /*
+           IMPORTANT:
+           EC - Diploma / Terminal / ID
+        */
+
+        const terminalRef =
+            ref(
+                db,
+                "EC - Diploma/Terminal/" +
+                terminalId
+            );
+
+
+        /*
+           Check whether this ID
+           already exists.
+        */
+
+        const snapshot =
+            await get(terminalRef);
+
+
+        if(snapshot.exists()){
+
+            showCreateError(
+                "TERMINAL ID \"" +
+                terminalId +
+                "\" already exists."
+            );
+
+            resetCreateButton();
+
+            return;
+
+        }
+
+
+        /*
+           Create TERMINAL.
+
+           messages is intentionally
+           created as an empty object.
+        */
+
+        await set(
+            terminalRef,
+            {
+
+                createdAt:
+                    serverTimestamp(),
+
+                title:
+                    terminalId,
+
+                messages: {}
+
+            }
+        );
+
+
+        /*
+           Success
+        */
+
+        createMessage.textContent =
+            "TERMINAL \"" +
+            terminalId +
+            "\" created successfully.";
+
+        createMessage.className =
+            "message success";
+
+
+        createdId.textContent =
+            terminalId;
+
+        createdInfo.style.display =
+            "block";
+
+
+        terminalInput.value = "";
+
+
+    }catch(error){
+
+        console.error(
+            "Firebase error:",
+            error
+        );
+
+        showCreateError(
+            "Unable to create TERMINAL. " +
+            "Please check your Firebase connection."
+        );
+
+    }
+
+
+    resetCreateButton();
+
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+function showCreateError(text){
+
+    createMessage.textContent =
+        text;
+
+    createMessage.className =
+        "message error";
+
+}
+
+
+/* =========================================
+   CLEAR MESSAGE
+========================================= */
+
+function clearCreateMessage(){
+
+    createMessage.textContent =
+        "";
+
+    createMessage.className =
+        "message";
+
+}
+
+
+/* =========================================
+   RESET BUTTON
+========================================= */
+
+function resetCreateButton(){
+
+    createButton.disabled =
+        false;
+
+    createButton.innerHTML =
+        '<i class="fa-solid fa-plus"></i> &nbsp; CREATE TERMINAL';
+
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+logoutButton.addEventListener(
+    "click",
+    function(){
+
+        adminPanel.style.display =
+            "none";
+
+        loginPanel.style.display =
+            "block";
+
+        createArea.style.display =
+            "none";
+
+        createdInfo.style.display =
+            "none";
+
+        clearCreateMessage();
+
+        username.focus();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

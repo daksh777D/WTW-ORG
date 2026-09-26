@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Working in Progress</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#000;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    overflow:hidden;
+}
+
+/* Floating Background */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+    radial-gradient(#00cc44 1px, transparent 1px);
+    background-size:30px 30px;
+    opacity:.08;
+    animation:bgMove 18s linear infinite;
+}
+
+@keyframes bgMove{
+    from{
+        transform:translateY(0);
+    }
+    to{
+        transform:translateY(30px);
+    }
+}
+
+/* Card */
+
+.container{
+    width:90%;
+    max-width:420px;
+    text-align:center;
+    background:#111;
+    border:2px solid #00cc44;
+    border-radius:16px;
+    padding:35px 25px;
+    box-shadow:0 0 20px rgba(0,204,68,.25);
+    position:relative;
+    z-index:1;
+}
+
+/* Animated Icon */
+
+.icon{
+    font-size:75px;
+    color:#00cc44;
+    margin-bottom:18px;
+    animation:rotate 3s linear infinite,
+               glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes rotate{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+@keyframes glow{
+    from{
+        text-shadow:0 0 5px #00cc44;
+    }
+    to{
+        text-shadow:
+        0 0 10px #00cc44,
+        0 0 25px #00cc44,
+        0 0 40px #00cc44;
+    }
+}
+
+/* Text */
+
+h1{
+    color:#00cc44;
+    font-size:30px;
+    margin-bottom:12px;
+}
+
+p{
+    color:#ddd;
+    line-height:1.6;
+    margin-bottom:30px;
+}
+
+/* Progress Bar */
+
+.progress{
+    width:100%;
+    height:10px;
+    background:#222;
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid #00cc44;
+}
+
+.progress span{
+    display:block;
+    width:35%;
+    height:100%;
+    background:#00cc44;
+    border-radius:20px;
+    animation:loading 1.5s linear infinite;
+}
+
+@keyframes loading{
+    from{
+        transform:translateX(-120%);
+    }
+    to{
+        transform:translateX(350%);
+    }
+}
+
+/* Loading Text */
+
+.loading{
+    margin-top:18px;
+    color:#00cc44;
+    font-weight:bold;
+    letter-spacing:2px;
+    animation:blink 1s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:.35;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<i class="fa-solid fa-gears icon"></i>
+
+<h1>Working in Progress</h1>
+
+<p>
+This page is currently under development.<br>
+We're building something useful for Diploma in ECE students.
+</p>
+
+<div class="progress">
+    <span></span>
+</div>
+
+<div class="loading">LOADING...</div>
+
+</div>
+
+</body>
+</html>
