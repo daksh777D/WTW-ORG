@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>3D Resistor Explorer</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+    background:#050b10;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+#app{
+    min-height:100vh;
+}
+
+header{
+    height:75px;
+    padding:0 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#081119;
+    border-bottom:1px solid #203541;
+}
+
+header h1{
+    color:#55e6a5;
+    font-size:24px;
+}
+
+header p{
+    margin-top:4px;
+    color:#8297a4;
+    font-size:12px;
+}
+
+.badge{
+    padding:8px 13px;
+    border:1px solid #31505e;
+    border-radius:20px;
+    color:#9cb0ba;
+    font-size:11px;
+}
+
+.main{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 340px;
+    gap:18px;
+    padding:18px;
+}
+
+.viewer{
+    position:relative;
+    height:650px;
+    min-width:0;
+    overflow:hidden;
+    border:1px solid #213945;
+    border-radius:18px;
+    background:
+        radial-gradient(circle at 50% 45%,#102630 0%,#071118 42%,#03080c 100%);
+}
+
+#canvas{
+    display:block;
+    width:100%;
+    height:100%;
+}
+
+.viewerTitle{
+    position:absolute;
+    left:18px;
+    top:18px;
+    z-index:10;
+    padding:10px 13px;
+    background:rgba(3,10,15,.82);
+    border:1px solid #294450;
+    border-radius:10px;
+}
+
+.viewerTitle b{
+    display:block;
+    font-size:14px;
+}
+
+.viewerTitle span{
+    display:block;
+    margin-top:3px;
+    color:#8297a3;
+    font-size:10px;
+}
+
+.controls{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:18px;
+    z-index:10;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+button{
+    min-height:42px;
+    padding:9px 13px;
+    border:1px solid #304b57;
+    border-radius:8px;
+    background:#0b1a23;
+    color:#dce8ed;
+    cursor:pointer;
+}
+
+button:hover{
+    border-color:#55e6a5;
+}
+
+button.active{
+    background:#123c33;
+    color:#55e6a5;
+    border-color:#55e6a5;
+}
+
+.side{
+    display:flex;
+    flex-direction:column;
+    gap:13px;
+}
+
+.panel{
+    padding:15px;
+    background:#0a151d;
+    border:1px solid #203743;
+    border-radius:14px;
+}
+
+.panel h2{
+    margin-bottom:11px;
+    font-size:15px;
+}
+
+.panel h2 span{
+    color:#55e6a5;
+}
+
+.layerList{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.layer{
+    min-height:55px;
+    padding:9px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border:1px solid #1d323e;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.layer:hover,
+.layer.selected{
+    background:#10251f;
+    border-color:#55e6a5;
+}
+
+.dot{
+    width:14px;
+    height:14px;
+    flex:none;
+    border-radius:50%;
+}
+
+.layer strong{
+    display:block;
+    font-size:12px;
+}
+
+.layer small{
+    display:block;
+    margin-top:3px;
+    color:#718792;
+    font-size:10px;
+}
+
+.info{
+    color:#a8bac3;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.info strong{
+    color:white;
+}
+
+.values{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+}
+
+.value{
+    padding:9px;
+    border:1px solid #1d323e;
+    border-radius:8px;
+    background:#061018;
+}
+
+.value small{
+    display:block;
+    color:#6e8490;
+    font-size:9px;
+}
+
+.value b{
+    display:block;
+    margin-top:4px;
+    color:#55e6a5;
+    font-size:11px;
+}
+/*
+#labels{
+    position:absolute;
+    inset:0;
+    z-index:8;
+    pointer-events:none;
+}
+
+.label{
+    position:absolute;
+    padding:6px 9px;
+    background:rgba(3,9,13,.94);
+    border:1px solid #55e6a5;
+    border-radius:6px;
+    color:#fff;
+    font-size:10px;
+    white-space:nowrap;
+    transform:translate(-50%,-50%);
+    transition: opacity 2s;
+}
+
+.label:before{
+    content:"";
+    position:absolute;
+    width:30px;
+    height:1px;
+    background:#55e6a5;
+    right:100%;
+    top:50%;
+}
+*/
+@media(max-width:850px){
+
+    .main{
+        grid-template-columns:1fr;
+    }
+
+    .viewer{
+        height:540px;
+    }
+}
+
+@media(max-width:500px){
+
+    header{
+        height:auto;
+        padding:15px;
+    }
+
+    header h1{
+        font-size:19px;
+    }
+
+    .badge{
+        display:none;
+    }
+
+    .main{
+        padding:10px;
+    }
+
+    .viewer{
+        height:460px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+<header>
+    <div>
+        <h1>3D Resistor Explorer</h1>
+        <p>Understand a resistor layer by layer</p>
+    </div>
+
+    <div class="badge">
+        INTERACTIVE ELECTRONICS LAB
+    </div>
+</header>
+
+
+<div class="main">
+
+<section class="viewer">
+
+    <div class="viewerTitle">
+        <b id="viewTitle">Complete Resistor</b>
+        <span>Drag to rotate • Scroll to zoom</span>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="labels">
+
+        <div class="label" id="labelBody">
+            CERAMIC BODY
+        </div>
+
+        <div class="label" id="labelFilm">
+            RESISTIVE FILM
+        </div>
+
+        <div class="label" id="labelBands">
+            COLOR BANDS
+        </div>
+
+        <div class="label" id="labelCaps">
+            METAL END CAP
+        </div>
+
+        <div class="label" id="labelLeads">
+            METAL LEAD
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+        <button id="completeBtn" class="active">
+            Complete
+        </button>
+
+        <button id="explodeBtn">
+            Exploded View
+        </button>
+
+        <button id="crossBtn">
+            Cross Section
+        </button>
+
+        <button id="resetBtn">
+            Reset
+        </button>
+
+    </div>
+
+</section>
+
+
+<aside class="side">
+
+    <div class="panel">
+
+        <h2>Find <span>Resistor Value</span></h2>
+    
+        <input
+            id="resistorInput"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="Enter value in ohms"
+            style="
+                width:100%;
+                padding:12px;
+                border-radius:8px;
+                border:1px solid #304752;
+                background:#061018;
+                color:white;
+                font-size:14px;
+                outline:none;
+            "
+        >
+    
+        <button
+            id="findResistorBtn"
+            style="width:100%;margin-top:8px;"
+        >
+            Find Color Code
+        </button>
+    
+        <div
+            id="resistorResult"
+            style="
+                margin-top:10px;
+                font-size:12px;
+                line-height:1.5;
+            "
+        ></div>
+    
+    </div>
+
+    <div class="panel">
+
+        <h2>Resistor <span>Layers</span></h2>
+
+        <div class="layerList">
+
+            <div class="layer selected" data-layer="body">
+                <div class="dot" style="background:#c58b55"></div>
+
+                <div>
+                    <strong>Ceramic Body</strong>
+                    <small>Insulating core</small>
+                </div>
+            </div>
+
+
+            <div class="layer" data-layer="film">
+
+                <div class="dot" style="background:#9b4735"></div>
+
+                <div>
+                    <strong>Resistive Film</strong>
+                    <small>Creates resistance</small>
+                </div>
+
+            </div>
+
+
+            <div class="layer" data-layer="bands">
+
+                <div class="dot" style="background:#222"></div>
+
+                <div>
+                    <strong>Color Bands</strong>
+                    <small>Resistance code</small>
+                </div>
+
+            </div>
+
+
+            <div class="layer" data-layer="caps">
+
+                <div class="dot" style="background:#b8c1c5"></div>
+
+                <div>
+                    <strong>Metal End Caps</strong>
+                    <small>Electrical connection</small>
+                </div>
+
+            </div>
+
+
+            <div class="layer" data-layer="leads">
+
+                <div class="dot" style="background:#7d888e"></div>
+
+                <div>
+                    <strong>Metal Leads</strong>
+                    <small>Connect to circuit</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <h2 id="infoTitle">
+            Ceramic Body
+        </h2>
+
+        <p class="info" id="infoText">
+            The ceramic body provides the physical structure of the
+            resistor and electrically separates the resistive material
+            from the inside.
+        </p>
+
+    </div>
+
+
+  
+        <div class="panel">
+
+            <h2>Selected <span>Resistor</span></h2>
+        
+            <div class="values">
+        
+                <div class="value">
+                    <small>COLOR CODE</small>
+                    <b id="colorCodeText">Brown • Black • Red</b>
+                </div>
+        
+                <div class="value">
+                    <small>RESISTANCE</small>
+                    <b id="resistanceText">1 kΩ</b>
+                </div>
+        
+                <div class="value">
+                    <small>TOLERANCE</small>
+                    <b>±5%</b>
+                </div>
+        
+                <div class="value">
+                    <small>POWER</small>
+                    <b>¼ Watt</b>
+
+                </div>
+        
+            </div>
+        
+        </div>
+
+
+
+
+    <div class="panel">
+
+        <h2>How It Works</h2>
+
+        <p class="info">
+            Current enters through one lead, passes through the
+            resistive material, and exits through the other lead.
+            A resistor limits current according to
+            <strong>V = I × R</strong>.
+        </p>
+
+    </div>
+
+</aside>
+
+</div>
+
+</div>
+
+
+<!--
+    IMPORTANT:
+    This version intentionally uses the older non-module Three.js build.
+    It works with normal HTML files without:
+        type="module"
+        import ...
+-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+
+<script>
+
+(function(){
+
+"use strict";
+
+
+/* =========================================================
+   BASIC SETUP
+========================================================= */
+
+var canvas = document.getElementById("canvas");
+
+var viewer = document.querySelector(".viewer");
+
+var renderer = new THREE.WebGLRenderer({
+    canvas:canvas,
+    antialias:true,
+    alpha:true
+});
+
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio || 1,2)
+);
+
+renderer.setSize(
+    viewer.clientWidth,
+    viewer.clientHeight,
+    false
+);
+
+
+var scene = new THREE.Scene();
+
+
+var camera = new THREE.PerspectiveCamera(
+    45,
+    viewer.clientWidth / viewer.clientHeight,
+    0.1,
+    100
+);
+
+camera.position.set(6,3.2,7);
+
+
+var controls = new THREE.OrbitControls(
+    camera,
+    canvas
+);
+
+controls.enableDamping=true;
+controls.dampingFactor=.07;
+
+controls.minDistance=4;
+controls.maxDistance=12;
+
+controls.target.set(0,0,0);
+
+
+/* =========================================================
+   LIGHTING
+========================================================= */
+
+var ambient = new THREE.AmbientLight(
+    0xffffff,
+    1.7
+);
+
+scene.add(ambient);
+
+
+var light1 = new THREE.DirectionalLight(
+    0xffffff,
+    2.8
+);
+
+light1.position.set(5,7,6);
+
+scene.add(light1);
+
+
+var light2 = new THREE.DirectionalLight(
+    0x75bfff,
+    1.3
+);
+
+light2.position.set(-5,3,-5);
+
+scene.add(light2);
+
+
+/* =========================================================
+   RESISTOR GROUPS
+========================================================= */
+
+var resistor = new THREE.Group();
+
+scene.add(resistor);
+
+
+var bodyGroup = new THREE.Group();
+var filmGroup = new THREE.Group();
+var bandGroup = new THREE.Group();
+var capGroup = new THREE.Group();
+var leadGroup = new THREE.Group();
+
+resistor.add(bodyGroup);
+resistor.add(filmGroup);
+resistor.add(bandGroup);
+resistor.add(capGroup);
+resistor.add(leadGroup);
+
+
+/* =========================================================
+   MATERIALS
+========================================================= */
+
+var bodyMaterial =
+new THREE.MeshStandardMaterial({
+    color:0xc58b55,
+    roughness:.55
+});
+
+
+var filmMaterial =
+new THREE.MeshStandardMaterial({
+    color:0x923f30,
+    roughness:.65
+});
+
+
+var metalMaterial =
+new THREE.MeshStandardMaterial({
+    color:0xbcc5c9,
+    metalness:.85,
+    roughness:.22
+});
+
+
+var leadMaterial =
+new THREE.MeshStandardMaterial({
+    color:0x707b80,
+    metalness:.9,
+    roughness:.2
+});
+
+
+var blackMaterial =
+new THREE.MeshStandardMaterial({
+    color:0x111111,
+    roughness:.5
+});
+
+var bandMaterials = {
+
+    black: new THREE.MeshStandardMaterial({
+        color:0x111111,
+        roughness:.5
+    }),
+
+    brown: new THREE.MeshStandardMaterial({
+        color:0x704020,
+        roughness:.5
+    }),
+
+    red: new THREE.MeshStandardMaterial({
+        color:0xa92525,
+        roughness:.5
+    }),
+
+    orange: new THREE.MeshStandardMaterial({
+        color:0xd86b20,
+        roughness:.5
+    }),
+
+    yellow: new THREE.MeshStandardMaterial({
+        color:0xd8b51e,
+        roughness:.5
+    }),
+
+    green: new THREE.MeshStandardMaterial({
+        color:0x218c45,
+        roughness:.5
+    }),
+
+    blue: new THREE.MeshStandardMaterial({
+        color:0x2869b0,
+        roughness:.5
+    }),
+
+    violet: new THREE.MeshStandardMaterial({
+        color:0x713c9e,
+        roughness:.5
+    }),
+
+    grey: new THREE.MeshStandardMaterial({
+        color:0x777777,
+        roughness:.5
+    }),
+
+    white: new THREE.MeshStandardMaterial({
+        color:0xf2f2f2,
+        roughness:.5
+    }),
+
+    gold: new THREE.MeshStandardMaterial({
+        color:0xc59b3b,
+        metalness:.65,
+        roughness:.25
+    }),
+
+    silver: new THREE.MeshStandardMaterial({
+        color:0xbcc4c8,
+        metalness:.7,
+        roughness:.25
+    })
+
+};
+
+/* =========================================================
+   CYLINDER HELPER
+========================================================= */
+
+function makeCylinder(
+    radius,
+    length,
+    material
+){
+
+    var geometry =
+    new THREE.CylinderGeometry(
+        radius,
+        radius,
+        length,
+        64
+    );
+
+    var mesh =
+    new THREE.Mesh(
+        geometry,
+        material
+    );
+
+    /*
+       Cylinder normally points vertically.
+       Rotate it so it points along X.
+    */
+
+    mesh.rotation.z =
+    Math.PI / 2;
+
+    return mesh;
+}
+
+/* =========================================================
+   CERAMIC BODY
+========================================================= */
+
+var body =
+makeCylinder(
+    .95,
+    3.4,
+    bodyMaterial
+);
+
+bodyGroup.add(body);
+
+
+/* =========================================================
+   RESISTIVE FILM
+========================================================= */
+
+var film =
+makeCylinder(
+    .965,
+    2.85,
+    filmMaterial
+);
+
+filmGroup.add(film);
+
+
+/* =========================================================
+   COLOR BANDS
+========================================================= */
+
+function createBand(
+    x,
+    width,
+    material
+){
+
+    var band =
+    makeCylinder(
+        .98,
+        width,
+        material
+    );
+
+    band.position.x=x;
+
+    bandGroup.add(band);
+
+    return band;
+}
+
+var resistorBands = [];
+
+resistorBands.push(
+    createBand(-1.02,.16,bandMaterials.brown)
+);
+
+resistorBands.push(
+    createBand(-.69,.16,bandMaterials.black)
+);
+
+resistorBands.push(
+    createBand(-.36,.18,bandMaterials.red)
+);
+
+resistorBands.push(
+    createBand(.39,.13,bandMaterials.gold)
+);
+
+
+/* =========================================================
+   END CAPS
+========================================================= */
+
+var leftCap =
+makeCylinder(
+    1.01,
+    .34,
+    metalMaterial
+);
+
+leftCap.position.x=-1.72;
+
+
+var rightCap =
+makeCylinder(
+    1.01,
+    .34,
+    metalMaterial
+);
+
+rightCap.position.x=1.72;
+
+
+capGroup.add(leftCap);
+capGroup.add(rightCap);
+
+
+/* =========================================================
+   LEADS
+========================================================= */
+
+var leftLead =
+makeCylinder(
+    .15,
+    2.4,
+    leadMaterial
+);
+
+leftLead.position.x=-3.05;
+
+
+var rightLead =
+makeCylinder(
+    .15,
+    2.4,
+    leadMaterial
+);
+
+rightLead.position.x=3.05;
+
+
+leadGroup.add(leftLead);
+leadGroup.add(rightLead);
+
+
+/* =========================================================
+   LABEL ELEMENTS
+========================================================= */
+
+var labelBody =
+document.getElementById("labelBody");
+
+var labelFilm =
+document.getElementById("labelFilm");
+
+var labelBands =
+document.getElementById("labelBands");
+
+var labelCaps =
+document.getElementById("labelCaps");
+
+var labelLeads =
+document.getElementById("labelLeads");
+
+
+var labelData = {
+
+    body:{
+        element:labelBody,
+        position:new THREE.Vector3(
+            0,
+            1.35,
+            .2
+        )
+    },
+
+    film:{
+        element:labelFilm,
+        position:new THREE.Vector3(
+            .35,
+            -1.35,
+            .15
+        )
+    },
+
+    bands:{
+        element:labelBands,
+        position:new THREE.Vector3(
+            -.7,
+            1.2,
+            .15
+        )
+    },
+
+    caps:{
+        element:labelCaps,
+        position:new THREE.Vector3(
+            -1.75,
+            -1.25,
+            .1
+        )
+    },
+
+    leads:{
+        element:labelLeads,
+        position:new THREE.Vector3(
+            -3.05,
+            .65,
+            .1
+        )
+    }
+
+};
+
+
+/* =========================================================
+   UPDATE LABEL POSITIONS
+========================================================= */
+
+function updateLabels(){
+
+    var rect =
+    viewer.getBoundingClientRect();
+
+
+    for(var key in labelData){
+
+        var data =
+        labelData[key];
+
+        var pos =
+        data.position.clone();
+
+        /*
+           Labels follow the resistor group.
+        */
+
+        pos.applyMatrix4(
+            resistor.matrixWorld
+        );
+
+        pos.project(camera);
+
+
+        var x =
+        (pos.x + 1) / 2 *
+        rect.width;
+
+
+        var y =
+        (-pos.y + 1) / 2 *
+        rect.height;
+
+
+        data.element.style.left =
+        x + "px";
+
+
+        data.element.style.top =
+        y + "px";
+
+
+        /*
+           Hide labels if they are behind
+           the camera.
+        */
+
+        if(pos.z > 1){
+
+            data.element.style.opacity="0";
+
+        }else{
+
+            data.element.style.opacity="1";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+var descriptions={
+
+    body:{
+        title:"Ceramic Body",
+
+        text:
+        "The ceramic body gives the resistor its physical shape. " +
+        "It is an insulating material that supports the resistive layer."
+    },
+
+    film:{
+        title:"Resistive Film",
+
+        text:
+        "The resistive film is the part that creates electrical " +
+        "resistance. Its material and dimensions determine the resistance value."
+    },
+
+    bands:{
+        title:"Color Bands",
+
+        text:
+        "The color bands provide a code that tells us the resistance " +
+        "value and tolerance of the resistor."
+    },
+
+    caps:{
+        title:"Metal End Caps",
+
+        text:
+        "The metal end caps connect the resistive material to the " +
+        "metal leads and provide an electrical connection."
+    },
+
+    leads:{
+        title:"Metal Leads",
+
+        text:
+        "The leads are the wires connected to the circuit. Current " +
+        "enters through one lead and exits through the other."
+    }
+
+};
+
+
+function selectLayer(name){
+
+    var layers =
+    document.querySelectorAll(".layer");
+
+    for(var i=0;i<layers.length;i++){
+
+        layers[i].classList.toggle(
+            "selected",
+            layers[i].getAttribute("data-layer")===name
+        );
+
+    }
+
+
+    document.getElementById(
+        "infoTitle"
+    ).textContent =
+    descriptions[name].title;
+
+
+    document.getElementById(
+        "infoText"
+    ).textContent =
+    descriptions[name].text;
+
+
+    /*
+       Make selected label stronger.
+    */
+
+    var allLabels=[
+        labelBody,
+        labelFilm,
+        labelBands,
+        labelCaps,
+        labelLeads
+    ];
+
+    for(var j=0;j<allLabels.length;j++){
+
+        allLabels[j].style.borderColor="#36515e";
+
+    }
+
+
+    if(name==="body")
+        labelBody.style.borderColor="#55e6a5";
+
+    if(name==="film")
+        labelFilm.style.borderColor="#ff8b68";
+
+    if(name==="bands")
+        labelBands.style.borderColor="#f0c75e";
+
+    if(name==="caps")
+        labelCaps.style.borderColor="#c5d0d4";
+
+    if(name==="leads")
+        labelLeads.style.borderColor="#aab8bf";
+
+}
+
+
+/* =========================================================
+   LAYER CLICK
+========================================================= */
+
+var layerButtons =
+document.querySelectorAll(".layer");
+
+
+for(var i=0;i<layerButtons.length;i++){
+
+    layerButtons[i].addEventListener(
+        "click",
+        function(){
+
+            selectLayer(
+                this.getAttribute("data-layer")
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   VIEW MODES
+========================================================= */
+
+var exploded=false;
+var crossSection=false;
+
+
+function setExploded(value){
+
+    exploded=value;
+
+
+    if(value){
+
+        /*
+           Move components apart.
+        */
+
+        capGroup.children[0].position.x=-2.75;
+        capGroup.children[1].position.x=2.75;
+
+        leadGroup.children[0].position.x=-4.25;
+        leadGroup.children[1].position.x=4.25;
+
+        bandGroup.position.x=0;
+
+        filmGroup.position.z=.18;
+
+    }else{
+
+        capGroup.children[0].position.x=-1.72;
+        capGroup.children[1].position.x=1.72;
+
+        leadGroup.children[0].position.x=-3.05;
+        leadGroup.children[1].position.x=3.05;
+
+        bandGroup.position.x=0;
+
+        filmGroup.position.z=0;
+
+    }
+
+}
+
+
+function setCrossSection(value){
+
+    crossSection=value;
+
+
+    if(value){
+
+        body.material.transparent=true;
+        body.material.opacity=.28;
+
+        film.material.transparent=true;
+        film.material.opacity=.48;
+
+        leftCap.material.transparent=true;
+        leftCap.material.opacity=.38;
+
+        rightCap.material.transparent=true;
+        rightCap.material.opacity=.38;
+
+    }else{
+
+        body.material.transparent=false;
+        body.material.opacity=1;
+
+        film.material.transparent=false;
+        film.material.opacity=1;
+
+        leftCap.material.transparent=false;
+        leftCap.material.opacity=1;
+
+        rightCap.material.transparent=false;
+        rightCap.material.opacity=1;
+
+    }
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+var completeBtn=
+document.getElementById("completeBtn");
+
+var explodeBtn=
+document.getElementById("explodeBtn");
+
+var crossBtn=
+document.getElementById("crossBtn");
+
+var resetBtn=
+document.getElementById("resetBtn");
+
+var viewTitle=
+document.getElementById("viewTitle");
+
+
+function activeButton(button){
+
+    completeBtn.classList.remove("active");
+    explodeBtn.classList.remove("active");
+    crossBtn.classList.remove("active");
+
+    button.classList.add("active");
+}
+
+
+completeBtn.onclick=function(){
+
+    activeButton(completeBtn);
+
+    setExploded(false);
+    setCrossSection(false);
+
+    viewTitle.textContent=
+    "Complete Resistor";
+
+};
+
+
+explodeBtn.onclick=function(){
+
+    activeButton(explodeBtn);
+
+    setExploded(true);
+    setCrossSection(false);
+
+    viewTitle.textContent=
+    "Exploded Layer View";
+
+};
+
+
+crossBtn.onclick=function(){
+
+    activeButton(crossBtn);
+
+    setExploded(false);
+    setCrossSection(true);
+
+    viewTitle.textContent=
+    "Cross Section";
+
+};
+
+
+resetBtn.onclick=function(){
+
+    setExploded(false);
+    setCrossSection(false);
+
+    camera.position.set(
+        6,
+        3.2,
+        7
+    );
+
+    controls.target.set(
+        0,
+        0,
+        0
+    );
+
+    controls.update();
+
+    activeButton(completeBtn);
+
+    viewTitle.textContent=
+    "Complete Resistor";
+
+    selectLayer("body");
+
+};
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+function resize(){
+
+    var width=
+    viewer.clientWidth;
+
+    var height=
+    viewer.clientHeight;
+
+
+    camera.aspect=
+    width/height;
+
+    camera.updateProjectionMatrix();
+
+
+    renderer.setSize(
+        width,
+        height,
+        false
+    );
+
+}
+
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    /*
+       Slow automatic rotation.
+       Dragging with the mouse/touch still works.
+    */
+
+    resistor.rotation.y += .002;
+
+
+    controls.update();
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+
+    updateLabels();
+
+}
+
+function formatResistance(value){
+
+if(value >= 1000000){
+
+    return (
+        value / 1000000
+    ).toFixed(
+        value % 1000000 === 0 ? 0 : 2
+    ) + " MΩ";
+
+}
+
+
+if(value >= 1000){
+
+    return (
+        value / 1000
+    ).toFixed(
+        value % 1000 === 0 ? 0 : 2
+    ) + " kΩ";
+
+}
+
+
+return value + " Ω";
+
+}
+
+/* =========================================================
+   RESISTOR VALUE CALCULATOR
+========================================================= */
+
+var resistorInput =
+document.getElementById("resistorInput");
+
+var findResistorBtn =
+document.getElementById("findResistorBtn");
+
+var resistorResult =
+document.getElementById("resistorResult");
+
+var colorCodeText =
+document.getElementById("colorCodeText");
+
+var resistanceText =
+document.getElementById("resistanceText");
+
+
+/*
+    Standard E24 resistor values.
+
+    The entered value must be an actual
+    standard 5% resistor value.
+*/
+
+var E24 = [
+    10,11,12,13,15,16,18,20,22,24,27,30,
+    33,36,39,43,47,51,56,62,68,75,82,91
+];
+
+
+var digitColors = [
+
+    bandMaterials.black,
+    bandMaterials.brown,
+    bandMaterials.red,
+    bandMaterials.orange,
+    bandMaterials.yellow,
+    bandMaterials.green,
+    bandMaterials.blue,
+    bandMaterials.violet,
+    bandMaterials.grey,
+    bandMaterials.white
+
+];
+
+
+var digitNames = [
+
+    "Black",
+    "Brown",
+    "Red",
+    "Orange",
+    "Yellow",
+    "Green",
+    "Blue",
+    "Violet",
+    "Grey",
+    "White"
+
+];
+
+
+var digitMaterialNames = [
+
+    "black",
+    "brown",
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "blue",
+    "violet",
+    "grey",
+    "white"
+
+];
+
+
+function getStandardResistor(value){
+
+    /*
+        Convert value into:
+
+        first digit
+        second digit
+        multiplier
+    */
+
+    var exponent =
+    Math.floor(
+        Math.log10(value)
+    ) - 1;
+
+    var normalized =
+    value / Math.pow(10,exponent);
+
+    var closest=null;
+
+    for(
+        var i=0;
+        i<E24.length;
+        i++
+    ){
+
+        var candidate =
+        E24[i] *
+        Math.pow(10,exponent);
+
+        if(
+            Math.abs(candidate-value)
+            < 0.0001
+        ){
+
+            closest=candidate;
+            break;
+
+        }
+
+    }
+
+    if(closest===null){
+        return null;
+    }
+
+    var digits =
+    Math.round(
+        closest /
+        Math.pow(10,exponent)
+    );
+
+    var first =
+    Math.floor(digits/10);
+
+    var second =
+    digits%10;
+
+    return {
+
+        value:closest,
+
+        first:first,
+
+        second:second,
+
+        multiplier:exponent,
+
+        names:[
+            digitNames[first],
+            digitNames[second],
+            digitNames[exponent]
+        ],
+
+        materials:[
+            digitMaterialNames[first],
+            digitMaterialNames[second],
+            digitMaterialNames[exponent]
+        ]
+
+    };
+
+}
+
+function update3DBands(data){
+
+/*
+    First band
+*/
+
+resistorBands[0].material =
+bandMaterials[data.materials[0]];
+
+
+/*
+    Second band
+*/
+
+resistorBands[1].material =
+bandMaterials[data.materials[1]];
+
+
+/*
+    Multiplier band
+*/
+
+resistorBands[2].material =
+bandMaterials[data.materials[2]];
+
+
+/*
+    Tolerance band stays gold
+*/
+
+resistorBands[3].material =
+bandMaterials.gold;
+
+}
+
+
+findResistorBtn.addEventListener(
+    "click",
+    function(){
+
+        var value =
+        Number(
+            resistorInput.value
+        );
+
+
+        if(
+            !Number.isFinite(value) ||
+            value <= 0
+        ){
+
+            resistorResult.textContent =
+            "Enter a valid resistor value.";
+
+            resistorResult.style.color =
+            "#ff4d4d";
+
+            return;
+
+        }
+
+
+        var data =
+        getStandardResistor(value);
+
+
+        /*
+            No standard resistor
+        */
+
+        if(data===null){
+
+            resistorResult.textContent =
+            "No Resistor with this value";
+
+            resistorResult.style.color =
+            "#ff4d4d";
+
+            return;
+
+        }
+
+
+        /*
+            Valid resistor
+        */
+
+        resistorResult.textContent =
+        "Resistor found successfully.";
+
+        resistorResult.style.color =
+        "#55e6a5";
+
+
+        /*
+            Update text
+        */
+
+        colorCodeText.textContent =
+            data.names[0]
+            + " • "
+            + data.names[1]
+            + " • "
+            + data.names[2]
+            + " • Gold";
+
+
+        resistanceText.textContent =
+        formatResistance(data.value);
+
+
+        /*
+            Update 3D resistor
+        */
+
+        update3DBands(data);
+
+    }
+);
+
+
+
+/* =========================================================
+   START
+========================================================= */
+
+selectLayer("body");
+
+resize();
+
+animate();
+
+})();
+
+</script>
+
+</body>
+</html>
