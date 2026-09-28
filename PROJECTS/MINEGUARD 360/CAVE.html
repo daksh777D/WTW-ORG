@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
+
+<title>3D Environment - Android & Windows</title>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #87ceeb;
+        font-family: Arial, sans-serif;
+        touch-action: none;
+    }
+
+    canvas {
+        display: block;
+    }
+
+    /* =========================
+       ANDROID CONTROLS
+       ========================= */
+
+    #mobileControls {
+        position: fixed;
+        left: 0;
+        bottom: 20px;
+        width: 100%;
+        height: 180px;
+        z-index: 10;
+        pointer-events: none;
+    }
+
+    .mobileButton {
+        position: absolute;
+        width: 55px;
+        height: 55px;
+        border-radius: 15px;
+        border: 2px solid white;
+        background: rgba(0, 0, 0, 0.55);
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+        pointer-events: auto;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .mobileButton:active {
+        background: rgba(255,255,255,0.35);
+    }
+
+    #forward {
+        left: 80px;
+        top: 0;
+    }
+
+    #backward {
+        left: 80px;
+        top: 110px;
+    }
+
+    #left {
+        left: 15px;
+        top: 55px;
+    }
+
+    #right {
+        left: 145px;
+        top: 55px;
+    }
+
+    #up {
+        right: 80px;
+        top: 0;
+    }
+
+    #down {
+        right: 80px;
+        top: 110px;
+    }
+
+    #info {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 20;
+        padding: 8px 12px;
+        color: white;
+        background: rgba(0,0,0,0.5);
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    #desktopMessage {
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="info"></div>
+
+<!-- =========================
+     ANDROID CONTROLS
+     ========================= -->
+<div id="mobileControls">
+
+    <button class="mobileButton" id="forward">▲</button>
+
+    <button class="mobileButton" id="left">◀</button>
+
+    <button class="mobileButton" id="right">▶</button>
+
+    <button class="mobileButton" id="backward">▼</button>
+
+    <button class="mobileButton" id="up">⬆</button>
+
+    <button class="mobileButton" id="down">⬇</button>
+
+</div>
+
+
+
+
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js"
+          }
+        }
+        </script>
+        
+        <script type="module">
+      
+        import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/loaders/GLTFLoader.js';
+        
+
+import * as THREE from
+"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+
+/* =========================================================
+   DEVICE DETECTION
+   ========================================================= */
+
+const isAndroid =
+    /Android/i.test(navigator.userAgent);
+
+const isWindows =
+    /Windows/i.test(navigator.userAgent);
+
+const isDesktop = !isAndroid;
+
+
+/* =========================================================
+   BASIC THREE.JS SETUP
+   ========================================================= */
+
+const scene = new THREE.Scene();
+
+scene.background = new THREE.Color(0x87ceeb);
+
+
+const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    2000
+);
+
+
+
+// camera.rotation.x = Math.PI / 2 ;  // 90 degrees 
+// camera.rotation.y = Math.PI  ;      // 180 degrees
+camera.rotation.z = Math.PI / 0.5;  // 45 degrees
+camera.position.set(0, 0, 0);
+
+
+const renderer = new THREE.WebGLRenderer({
+    antialias: true
+});
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
+
+renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio, 2)
+);
+
+document.body.appendChild(renderer.domElement);
+
+
+/* =========================================================
+   LIGHT
+   ========================================================= */
+
+const ambientLight =
+    new THREE.AmbientLight(
+        0xffffff,
+        1.2
+    );
+
+scene.add(ambientLight);
+
+
+const sun2 =
+    new THREE.DirectionalLight(
+        0xffffff,
+        2
+    );
+
+sun2.position.set(
+    50,
+    100,
+    50
+);
+
+scene.add(sun2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// LOAD GLB
+// --------------------
+new GLTFLoader().load(
+    'scene2.glb',
+    (gltf) => {
+      gltf.scene.scale.set(0.5,0.5,0.5);
+      gltf.scene.position.set(1,1,1);
+      scene.add(gltf.scene);
+
+
+
+
+
+
+    },
+    undefined,
+    (e) => console.error(e)
+  );
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+// LOAD GLB
+// --------------------
+new GLTFLoader().load(
+    'truck2.glb',
+    (gltf) => {
+      gltf.scene.scale.set(2,2,2);
+      gltf.scene.position.set(-7,1,-53);
+      gltf.scene.rotation.y = -Math.PI / 2;
+      scene.add(gltf.scene);
+    },
+    undefined,
+    (e) => console.error(e)
+  );
+
+
+  
+// LOAD GLB
+// --------------------
+new GLTFLoader().load(
+    'jcb.glb',
+    (gltf2) => {
+      gltf2.scene.scale.set(8,8,8);
+      gltf2.scene.position.set(22,1,-26);
+      scene.add(gltf2.scene);
+    },
+    undefined,
+    (e) => console.error(e)
+  );
+  
+
+
+  
+// LOAD GLB
+  // --------------------
+  new GLTFLoader().load(
+    'jcb-picker.glb',
+    (gltf2) => {
+      gltf2.scene.scale.set(2,2,2);
+      gltf2.scene.position.set(-11,4,10);
+      scene.add(gltf2.scene);
+    },
+    undefined,
+    (e) => console.error(e)
+  );
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+// LOAD GLB
+  // --------------------
+  new GLTFLoader().load(
+    'haul.glb',
+    (gltf2) => {
+      gltf2.scene.scale.set(0.2,0.2,0.2);
+      gltf2.scene.position.set(-40,1,40);
+      gltf2.scene.rotation.y = Math.PI / 1.25;
+      scene.add(gltf2.scene);
+    },
+    undefined,
+    (e) => console.error(e)
+  );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Patch plane to hide the text
+const patch = new THREE.Mesh(
+  new THREE.PlaneGeometry(2, 0.6),          // width, height
+  new THREE.MeshBasicMaterial({
+    roughness: 5.9,
+    metalness: 30.0,
+    color: 0x636362,                        // light grey-blue, change to match the wall
+    side: THREE.DoubleSide,
+    depthTest: true                        // always draws on top so it can't hide inside the model
+  })
+);
+patch.renderOrder = 999;
+patch.position.set(12.5, 6, -41.5);    
+patch.rotation.y = Math.PI / 2;    
+patch.scale.set(3,3,3)              // move to where the text is
+scene.add(patch);
+
+
+
+
+/* =========================================================
+   GROUND
+   ========================================================= */
+
+const groundGeometry =
+    new THREE.PlaneGeometry(
+        1000,
+        1000
+    );
+
+const groundMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x4caf50
+    });
+
+const ground =
+    new THREE.Mesh(
+        groundGeometry,
+        groundMaterial
+    );
+
+ground.rotation.x = -Math.PI / 2;
+
+ground.position.y = 0;
+
+//  scene.add(ground);
+
+
+/* =========================================================
+   CUBES / ENVIRONMENT
+   ========================================================= */
+
+function createBuilding(
+    x,
+    z,
+    width,
+    height,
+    depth,
+    color
+) {
+
+    const geometry =
+        new THREE.BoxGeometry(
+            width,
+            height,
+            depth
+        );
+
+    const material =
+        new THREE.MeshStandardMaterial({
+            color: color
+        });
+
+    const building =
+        new THREE.Mesh(
+            geometry,
+            material
+        );
+
+    building.position.set(
+        x,
+        height / 2,
+        z
+    );
+
+    //  scene.add(building);
+}
+
+
+// Buildings
+createBuilding(
+    -15, -15,
+    8, 8, 8,
+    0xff5555
+);
+
+createBuilding(
+    15, -20,
+    10, 12, 8,
+    0x5555ff
+);
+
+createBuilding(
+    -20, 15,
+    7, 6, 10,
+    0xffff55
+);
+
+createBuilding(
+    20, 15,
+    9, 10, 9,
+    0xff55ff
+);
+
+
+/* =========================================================
+   TREES
+   ========================================================= */
+
+function createTree(x, z) {
+
+    // Trunk
+    const trunk =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                0.5,
+                0.7,
+                4,
+                8
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x8b4513
+            })
+        );
+
+    trunk.position.set(
+        x,
+        2,
+        z
+    );
+
+    // scene.add(trunk);
+
+
+    // Leaves
+    const leaves =
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                2.5,
+                12,
+                12
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x0b8f35
+            })
+        );
+
+    leaves.position.set(
+        x,
+        5,
+        z
+    );
+
+  //  scene.add(leaves);
+}
+
+
+for(let i = 0; i < 25; i++) {
+
+    const x =
+        (Math.random() - 0.5) * 100;
+
+    const z =
+        (Math.random() - 0.5) * 100;
+
+    createTree(x, z);
+}
+
+/* MINE */ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   SIMPLE 3D PROJECT TITLE SIGN
+   ========================================================= */
+
+
+/* ---------- EDIT THESE ---------- */
+
+var signTitle = "MineGuard 360*";
+var signSubtitle = "FOG AND LOW VISIBILITY DETECTION";
+
+var titleSize = 110;
+var subtitleSize = 32;
+
+var titleColor = "#ffffff";
+var subtitleColor = "#ffffff";
+
+var signColor = "#0a0a0a";
+
+
+/* ---------- SIGN GROUP ---------- */
+
+var signGroup = new THREE.Group();
+
+signGroup.position.set(20, 6, -37);
+signGroup.scale.set(0.5,0.5,0.5)
+
+/* =========================================================
+   SIGN BOARD
+   ========================================================= */
+
+var boardGeo = new THREE.BoxGeometry(
+    18,
+    4.5,
+    0.18
+);
+
+var boardMat = new THREE.MeshStandardMaterial({
+    color: signColor,
+    roughness: 0.7
+});
+
+var board = new THREE.Mesh(
+    boardGeo,
+    boardMat
+);
+
+signGroup.add(board);
+
+
+/* =========================================================
+   WHITE BORDER
+   ========================================================= */
+
+var borderGeo = new THREE.BoxGeometry(
+    17.7,
+    4.2,
+    0.03
+);
+
+var borderMat = new THREE.MeshBasicMaterial({
+    color: 0xffffff
+});
+
+var border = new THREE.Mesh(
+    borderGeo,
+    borderMat
+);
+
+border.position.z = 0.11;
+
+signGroup.add(border);
+
+
+/* =========================================================
+   INNER GREEN PANEL
+   ========================================================= */
+
+var innerGeo = new THREE.BoxGeometry(
+    17.35,
+    3.85,
+    0.04
+);
+
+var innerMat = new THREE.MeshBasicMaterial({
+    color: signColor
+});
+
+var inner = new THREE.Mesh(
+    innerGeo,
+    innerMat
+);
+
+inner.position.z = 0.14;
+
+signGroup.add(inner);
+
+
+/* =========================================================
+   TEXT CANVAS
+   ========================================================= */
+
+var canvas = document.createElement("canvas");
+
+canvas.width = 1200;
+canvas.height = 300;
+
+var ctx = canvas.getContext("2d");
+
+
+/* Draw green background */
+
+ctx.fillStyle = signColor;
+
+ctx.fillRect(
+    0,
+    0,
+    1200,
+    300
+);
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+ctx.fillStyle = titleColor;
+
+ctx.font =
+    "bold " +
+    titleSize +
+    "px Arial";
+
+ctx.textAlign = "center";
+
+ctx.textBaseline = "middle";
+
+ctx.fillText(
+    signTitle,
+    600,
+    115
+);
+
+
+/* =========================================================
+   SUBTITLE
+   ========================================================= */
+
+ctx.fillStyle = subtitleColor;
+
+ctx.font =
+    "bold " +
+    subtitleSize +
+    "px Arial";
+
+ctx.fillText(
+    signSubtitle,
+    600,
+    205
+);
+
+
+/* =========================================================
+   TEXTURE
+   ========================================================= */
+
+var textTexture =
+    new THREE.CanvasTexture(canvas);
+
+textTexture.needsUpdate = true;
+
+
+/* =========================================================
+   TEXT PANEL
+   ========================================================= */
+
+var textGeo = new THREE.PlaneGeometry(
+    17.2,
+    3.7
+);
+
+var textMat = new THREE.MeshBasicMaterial({
+    map: textTexture,
+    transparent: false
+});
+
+var textPanel = new THREE.Mesh(
+    textGeo,
+    textMat
+);
+
+textPanel.position.z = 0.18;
+
+signGroup.add(textPanel);
+
+
+/* =========================================================
+   METAL POLES
+   ========================================================= */
+
+var poleMat = new THREE.MeshStandardMaterial({
+    color: 0x555555,
+    metalness: 0.7,
+    roughness: 0.6
+});
+
+
+/* LEFT POLE */
+
+var leftPoleGeo =
+    new THREE.CylinderGeometry(
+        0.20,
+        0.22,
+        7,
+        16
+    );
+
+var leftPole =
+    new THREE.Mesh(
+        leftPoleGeo,
+        poleMat
+    );
+
+leftPole.position.set(
+    -7.5,
+    -5.7,
+    0
+);
+
+signGroup.add(leftPole);
+
+
+/* RIGHT POLE */
+
+var rightPole =
+    new THREE.Mesh(
+        leftPoleGeo,
+        poleMat
+    );
+
+rightPole.position.set(
+    7.5,
+    -5.7,
+    0
+);
+
+signGroup.add(rightPole);
+
+/* =========================================================
+   TOP METAL BAR
+   ========================================================= */
+
+   var topBarGeo =
+    new THREE.BoxGeometry(
+        18.3,
+        0.15,
+        0.15
+    );
+
+var topBar =
+    new THREE.Mesh(
+        topBarGeo,
+        poleMat
+    );
+
+topBar.position.y = 2.30;
+
+signGroup.add(topBar);
+
+
+/* =========================================================
+   BOTTOM METAL BAR
+   ========================================================= */
+
+var bottomBar =
+    new THREE.Mesh(
+        topBarGeo,
+        poleMat
+    );
+
+bottomBar.position.y = -2.30;
+
+signGroup.add(bottomBar);
+
+
+/* =========================================================
+   ADD TO YOUR SCENE
+   ========================================================= */
+
+scene.add(signGroup);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   CAMERA LOOK SYSTEM
+   ========================================================= */
+
+let yaw = 0;
+let pitch = 0;
+
+const lookSensitivity =
+    isAndroid ? 0.005 : 0.0025;
+
+
+/* =========================================================
+   ANDROID TOUCH LOOK
+   ========================================================= */
+
+let touchLooking = false;
+
+let previousTouchX = 0;
+let previousTouchY = 0;
+
+
+renderer.domElement.addEventListener(
+    "touchstart",
+    function(event) {
+
+        if(!isAndroid) return;
+
+        // Ignore touches on movement buttons
+        if(event.target.closest(".mobileButton"))
+            return;
+
+        if(event.touches.length !== 1)
+            return;
+
+        touchLooking = true;
+
+        previousTouchX =
+            event.touches[0].clientX;
+
+        previousTouchY =
+            event.touches[0].clientY;
+
+    },
+    { passive: false }
+);
+
+
+renderer.domElement.addEventListener(
+    "touchmove",
+    function(event) {
+
+        if(!isAndroid)
+            return;
+
+        if(!touchLooking)
+            return;
+
+        if(event.touches.length !== 1)
+            return;
+
+        event.preventDefault();
+
+        const touch =
+            event.touches[0];
+
+        const dx =
+            touch.clientX -
+            previousTouchX;
+
+        const dy =
+            touch.clientY -
+            previousTouchY;
+
+
+        yaw -= dx * lookSensitivity;
+
+        pitch -= dy * lookSensitivity;
+
+
+        // Prevent camera flipping
+        pitch = Math.max(
+            -Math.PI / 2 + 0.01,
+            Math.min(
+                Math.PI / 2 - 0.01,
+                pitch
+            )
+        );
+
+
+        previousTouchX =
+            touch.clientX;
+
+        previousTouchY =
+            touch.clientY;
+
+    },
+    { passive: false }
+);
+
+
+renderer.domElement.addEventListener(
+    "touchend",
+    function() {
+
+        touchLooking = false;
+
+    }
+);
+
+
+/* =========================================================
+   WINDOWS / DESKTOP POINTER LOCK
+   ========================================================= */
+
+let pointerLocked = false;
+
+
+if(isDesktop) {
+
+    renderer.domElement.addEventListener(
+        "click",
+        function() {
+
+            renderer.domElement.requestPointerLock();
+
+        }
+    );
+
+
+    document.addEventListener(
+        "pointerlockchange",
+        function() {
+
+            pointerLocked =
+                document.pointerLockElement ===
+                renderer.domElement;
+
+        }
+    );
+
+
+    document.addEventListener(
+        "mousemove",
+        function(event) {
+
+            if(!pointerLocked)
+                return;
+
+
+            yaw -=
+                event.movementX *
+                lookSensitivity;
+
+            pitch -=
+                event.movementY *
+                lookSensitivity;
+
+
+            pitch = Math.max(
+                -Math.PI / 2 + 0.01,
+                Math.min(
+                    Math.PI / 2 - 0.01,
+                    pitch
+                )
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MOVEMENT
+   ========================================================= */
+
+const keys = {
+
+    forward: false,
+    backward: false,
+    left: false,
+    right: false,
+    up: false,
+    down: false
+
+};
+
+
+/* =========================================================
+   WINDOWS KEYBOARD
+   ========================================================= */
+
+if(isDesktop) {
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            switch(event.code) {
+
+                case "KeyW":
+                    keys.forward = true;
+                    break;
+
+                case "KeyS":
+                    keys.backward = true;
+                    break;
+
+                case "KeyA":
+                    keys.left = true;
+                    break;
+
+                case "KeyD":
+                    keys.right = true;
+                    break;
+
+                case "KeyR":
+                    keys.up = true;
+                    break;
+
+                case "KeyF":
+                    keys.down = true;
+                    break;
+
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keyup",
+        function(event) {
+
+            switch(event.code) {
+
+                case "KeyW":
+                    keys.forward = false;
+                    break;
+
+                case "KeyS":
+                    keys.backward = false;
+                    break;
+
+                case "KeyA":
+                    keys.left = false;
+                    break;
+
+                case "KeyD":
+                    keys.right = false;
+                    break;
+
+                case "KeyR":
+                    keys.up = false;
+                    break;
+
+                case "KeyF":
+                    keys.down = false;
+                    break;
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ANDROID BUTTON SYSTEM
+   ========================================================= */
+
+function setupButton(
+    id,
+    keyName
+) {
+
+    const button =
+        document.getElementById(id);
+
+
+    button.addEventListener(
+        "touchstart",
+        function(event) {
+
+            event.preventDefault();
+
+            keys[keyName] = true;
+
+        },
+        { passive: false }
+    );
+
+
+    button.addEventListener(
+        "touchend",
+        function(event) {
+
+            event.preventDefault();
+
+            keys[keyName] = false;
+
+        },
+        { passive: false }
+    );
+
+
+    button.addEventListener(
+        "touchcancel",
+        function() {
+
+            keys[keyName] = false;
+
+        }
+    );
+
+
+    // Also works with mouse if testing mobile
+    button.addEventListener(
+        "mousedown",
+        function() {
+
+            keys[keyName] = true;
+
+        }
+    );
+
+
+    button.addEventListener(
+        "mouseup",
+        function() {
+
+            keys[keyName] = false;
+
+        }
+    );
+
+}
+
+
+setupButton(
+    "forward",
+    "forward"
+);
+
+setupButton(
+    "backward",
+    "backward"
+);
+
+setupButton(
+    "left",
+    "left"
+);
+
+setupButton(
+    "right",
+    "right"
+);
+
+setupButton(
+    "up",
+    "up"
+);
+
+setupButton(
+    "down",
+    "down"
+);
+
+
+/* =========================================================
+   ENABLE / DISABLE UI
+   ========================================================= */
+
+const mobileControls =
+    document.getElementById(
+        "mobileControls"
+    );
+
+const info =
+    document.getElementById(
+        "info"
+    );
+
+
+if(isAndroid) {
+
+    mobileControls.style.display =
+        "block";
+
+    info.innerHTML =
+        "ANDROID • Drag screen to look • Buttons to move";
+
+}
+else {
+
+    mobileControls.style.display =
+        "none";
+
+    if(isWindows) {
+
+        info.innerHTML =
+            "WINDOWS • Click screen for mouse look • W/A/S/D/R/F to move";
+
+    }
+    else {
+
+        info.innerHTML =
+            "DESKTOP • Click screen for mouse look • W/A/S/D/R/F to move";
+
+    }
+
+}
+
+
+/* =========================================================
+   MOVEMENT FUNCTION
+   ========================================================= */
+
+const moveSpeed = 0.50  ;
+
+
+function updateMovement() {
+
+    // Forward direction based on camera yaw
+    const forwardX =
+        -Math.sin(yaw);
+
+    const forwardZ =
+        -Math.cos(yaw);
+
+
+    // Right direction
+    const rightX =
+        Math.cos(yaw);
+
+    const rightZ =
+        -Math.sin(yaw);
+
+
+    if(keys.forward) {
+
+        camera.position.x +=
+            forwardX * moveSpeed;
+
+        camera.position.z +=
+            forwardZ * moveSpeed;
+
+    }
+
+
+    if(keys.backward) {
+
+        camera.position.x -=
+            forwardX * moveSpeed;
+
+        camera.position.z -=
+            forwardZ * moveSpeed;
+
+    }
+
+
+    if(keys.left) {
+
+        camera.position.x -=
+            rightX * moveSpeed;
+
+        camera.position.z -=
+            rightZ * moveSpeed;
+
+    }
+
+
+    if(keys.right) {
+
+        camera.position.x +=
+            rightX * moveSpeed;
+
+        camera.position.z +=
+            rightZ * moveSpeed;
+
+    }
+
+
+    if(keys.up) {
+
+        camera.position.y +=
+            moveSpeed;
+
+    }
+
+
+    if(keys.down) {
+
+        camera.position.y -=
+            moveSpeed;
+
+    }
+
+
+    // Prevent going below ground
+    if(camera.position.y < 1) {
+
+        camera.position.y = 1;
+
+    }
+
+}
+
+
+/* =========================================================
+   CAMERA ROTATION
+   ========================================================= */
+
+function updateCamera() {
+
+    camera.rotation.order =
+        "YXZ";
+
+    camera.rotation.y =
+        yaw;
+
+    camera.rotation.x =
+        pitch;
+
+}
+
+
+/* =========================================================
+   RESIZE
+   ========================================================= */
+
+window.addEventListener(
+    "resize",
+    function() {
+
+        camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+    }
+);
+
+/* SUN  */
+
+
+      
+
+// ---- Sun core (glowing sphere with noisy shader surface) ----
+var sunShaderMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    uTime: { value: 0 }
+  },
+  vertexShader: [
+    "varying vec3 vPos;",
+    "void main() {",
+    "  vPos = position;",
+    "  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);",
+    "}"
+  ].join("\n"),
+  fragmentShader: [
+    "uniform float uTime;",
+    "varying vec3 vPos;",
+    "",
+    "float hash(vec3 p) {",
+    "  return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);",
+    "}",
+    "",
+    "float noise(vec3 p) {",
+    "  vec3 i = floor(p);",
+    "  vec3 f = fract(p);",
+    "  f = f * f * (3.0 - 2.0 * f);",
+    "  float n000 = hash(i);",
+    "  float n100 = hash(i + vec3(1.0, 0.0, 0.0));",
+    "  float n010 = hash(i + vec3(0.0, 1.0, 0.0));",
+    "  float n110 = hash(i + vec3(1.0, 1.0, 0.0));",
+    "  float n001 = hash(i + vec3(0.0, 0.0, 1.0));",
+    "  float n101 = hash(i + vec3(1.0, 0.0, 1.0));",
+    "  float n011 = hash(i + vec3(0.0, 1.0, 1.0));",
+    "  float n111 = hash(i + vec3(1.0, 1.0, 1.0));",
+    "  float nx00 = mix(n000, n100, f.x);",
+    "  float nx10 = mix(n010, n110, f.x);",
+    "  float nx01 = mix(n001, n101, f.x);",
+    "  float nx11 = mix(n011, n111, f.x);",
+    "  float nxy0 = mix(nx00, nx10, f.y);",
+    "  float nxy1 = mix(nx01, nx11, f.y);",
+    "  return mix(nxy0, nxy1, f.z);",
+    "}",
+    "",
+    "float fbm(vec3 p) {",
+    "  float total = 0.0;",
+    "  float amp = 0.5;",
+    "  for (int i = 0; i < 5; i++) {",
+    "    total += noise(p) * amp;",
+    "    p = p * 2.0;",
+    "    amp = amp * 0.5;",
+    "  }",
+    "  return total;",
+    "}",
+    "",
+    "void main() {",
+    "  vec3 p = vPos * 2.5 + vec3(0.0, 0.0, uTime * 0.15);",
+    "  float n = fbm(p + vec3(uTime * 0.1, 0.0, 0.0));",
+    "",
+    "  vec3 colorDeep = vec3(1.0, 0.7, 0.1);",
+    "  vec3 colorMid = vec3(1.0, 0.85, 0.3);",
+    "  vec3 colorHot = vec3(1.0, 0.98, 0.85);",
+    "",
+    "  vec3 color = mix(colorDeep, colorMid, smoothstep(0.3, 0.6, n));",
+    "  color = mix(color, colorHot, smoothstep(0.65, 0.9, n));",
+    "",
+    "  gl_FragColor = vec4(color, 1.0);",
+    "}"
+  ].join("\n")
+});
+
+var sunGeo = new THREE.SphereGeometry(2, 64, 64);
+var sun = new THREE.Mesh(sunGeo, sunShaderMaterial);
+sun.position.set(-500,200,0);
+sun.scale.set(10,10,10);
+scene.add(sun);
+
+
+
+
+// ---- Glow halo using a canvas-generated radial gradient sprite ----
+function createGlowTexture() {
+  var canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 256;
+  var ctx = canvas.getContext('2d');
+  var gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+  gradient.addColorStop(0.0, 'rgba(255, 255, 240, 1.0)');
+  gradient.addColorStop(0.2, 'rgba(255, 240, 150, 0.8)');
+  gradient.addColorStop(0.45, 'rgba(255, 220, 80, 0.35)');
+  gradient.addColorStop(0.75, 'rgba(255, 200, 50, 0.1)');
+  gradient.addColorStop(1.0, 'rgba(255, 180, 0, 0.0)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 256, 256);
+  return new THREE.CanvasTexture(canvas);
+}
+
+var glowTexture = createGlowTexture();
+
+// Inner tight bright glow
+var glowMaterialInner = new THREE.SpriteMaterial({
+  map: glowTexture,
+  color: 0xffffff,
+  transparent: true,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+var glowSpriteInner = new THREE.Sprite(glowMaterialInner);
+glowSpriteInner.position.set(-500,200,0);
+glowSpriteInner.scale.set(60, 60, 10);
+scene.add(glowSpriteInner);
+
+// Outer soft wide glow (adds the "glowing from a distance" haze)
+var glowMaterialOuter = new THREE.SpriteMaterial({
+  map: glowTexture,
+  color: 0xfff2b0,
+
+  transparent: true,
+  opacity: 0.6,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+var glowSpriteOuter = new THREE.Sprite(glowMaterialOuter);
+glowSpriteOuter.position.set(-500,200,0);
+glowSpriteOuter.scale.set(140, 140, 10);
+scene.add(glowSpriteOuter);
+
+// ---- Point light so it feels like an emissive light source ----
+var sunLight = new THREE.PointLight(0xfff2cc, 2, 100);
+scene.add(sunLight);
+
+
+
+      
+        
+
+
+/* =========================================================
+   ANIMATION
+   ========================================================= */
+
+function animate() {
+
+
+
+
+
+
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    updateMovement();
+
+    updateCamera();
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
+
+
+animate();
+
+</script>
+
+</body>
+</html>
